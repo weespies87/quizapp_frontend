@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import '@fontsource/pixelify-sans/400.css';
 import '@fontsource/pixelify-sans/700.css';
-// Import the generated route tree
+import { Toaster } from 'sonner'
+// import rotues bellow
 import { routeTree } from './routeTree.gen'
-
 import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
 import {
@@ -42,6 +42,18 @@ if (rootElement && !rootElement.innerHTML) {
        <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
       </QueryClientProvider>
+      <Toaster
+        position="top-center"
+        richColors
+        toastOptions={{
+          className: 'sonner-toast',
+          style: {
+            backgroundColor: '#1e1e2f',
+            color: '#fff',
+            fontFamily: 'Pixelify Sans',
+            justifyContent: 'center',
+          },
+        }}/>
     </StrictMode>,
   )
 }
