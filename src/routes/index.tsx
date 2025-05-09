@@ -13,6 +13,7 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
   const [name, setName] = useState("");
+  const [hostName, setHostName] = useState("");
   const [roomCode, setRoomCode] = useState("");
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +21,9 @@ function HomePage() {
   const [isNameSet, setIsNameSet] = useState(false);
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
+    const newName = event.target.value;
+    setName(newName);
+    localStorage.setItem('playerName', newName);
   };
 
   const handleRoomCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,6 +35,7 @@ function HomePage() {
   const handleSetName = () => {
     if (name.trim()) {
       setIsNameSet(true);
+      localStorage.setItem('playerName', name);
       // You can also add any other logic needed when name is set
       console.log(`Name set to: ${name}`);
     } else {
@@ -49,7 +53,7 @@ function HomePage() {
     setError(null);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || "http://192.168.5.70:3001";
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3001";
       const response = await fetch(`${apiUrl}/api/createroom`, {
         method: "POST",
         headers: {
@@ -67,6 +71,9 @@ function HomePage() {
 
       // Check for roomId or other identifier in the response
       if (data.roomId) {
+        const hostName = `${data.roomId}-${name}`;
+        setHostName(hostName);
+        localStorage.setItem('hostName', hostName);
         navigate({ to: "/host/$roomId", params: { roomId: data.roomId } });
       } else if (data.roomcode) {
         // If backend returns roomcode instead of roomId
@@ -97,7 +104,7 @@ function HomePage() {
     setError(null);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || "http://192.168.5.70:3001";
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3001";
       const response = await fetch(`${apiUrl}/api/joinroom`, {
         method: "POST",
         headers: {
@@ -117,7 +124,7 @@ function HomePage() {
       console.log("Join room success:", data);
 
       if (data.roomId) {
-        navigate({ to: `/host/$roomId`, params: { roomId: data.roomId } });
+        navigate({ to: `/players/$roomId`, params: { roomId: data.roomId } });
       }
     } catch (err) {
       const errorMessage =

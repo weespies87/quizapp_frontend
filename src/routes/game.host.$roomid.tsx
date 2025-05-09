@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/playersScreen')({
+export const Route = createFileRoute('/game/host/$roomid')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  return <div>Hello "/players"!</div>
+  return <div>Hello "/game/host/$roomid"!</div>
 }

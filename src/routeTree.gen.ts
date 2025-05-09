@@ -11,39 +11,13 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as QuestionsImport } from './routes/questions'
-import { Route as PlayersScreenImport } from './routes/playersScreen'
-import { Route as JoinImport } from './routes/join'
-import { Route as CreateRoomImport } from './routes/createRoom'
 import { Route as IndexImport } from './routes/index'
 import { Route as PlayersRoomIdImport } from './routes/players.$roomId'
 import { Route as HostRoomIdImport } from './routes/host.$roomId'
+import { Route as GameRoomIdImport } from './routes/game.$roomId'
+import { Route as GameHostRoomidImport } from './routes/game.host.$roomid'
 
 // Create/Update Routes
-
-const QuestionsRoute = QuestionsImport.update({
-  id: '/questions',
-  path: '/questions',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const PlayersScreenRoute = PlayersScreenImport.update({
-  id: '/playersScreen',
-  path: '/playersScreen',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const JoinRoute = JoinImport.update({
-  id: '/join',
-  path: '/join',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const CreateRoomRoute = CreateRoomImport.update({
-  id: '/createRoom',
-  path: '/createRoom',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -63,6 +37,18 @@ const HostRoomIdRoute = HostRoomIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const GameRoomIdRoute = GameRoomIdImport.update({
+  id: '/game/$roomId',
+  path: '/game/$roomId',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const GameHostRoomidRoute = GameHostRoomidImport.update({
+  id: '/game/host/$roomid',
+  path: '/game/host/$roomid',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -74,32 +60,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/createRoom': {
-      id: '/createRoom'
-      path: '/createRoom'
-      fullPath: '/createRoom'
-      preLoaderRoute: typeof CreateRoomImport
-      parentRoute: typeof rootRoute
-    }
-    '/join': {
-      id: '/join'
-      path: '/join'
-      fullPath: '/join'
-      preLoaderRoute: typeof JoinImport
-      parentRoute: typeof rootRoute
-    }
-    '/playersScreen': {
-      id: '/playersScreen'
-      path: '/playersScreen'
-      fullPath: '/playersScreen'
-      preLoaderRoute: typeof PlayersScreenImport
-      parentRoute: typeof rootRoute
-    }
-    '/questions': {
-      id: '/questions'
-      path: '/questions'
-      fullPath: '/questions'
-      preLoaderRoute: typeof QuestionsImport
+    '/game/$roomId': {
+      id: '/game/$roomId'
+      path: '/game/$roomId'
+      fullPath: '/game/$roomId'
+      preLoaderRoute: typeof GameRoomIdImport
       parentRoute: typeof rootRoute
     }
     '/host/$roomId': {
@@ -116,6 +81,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlayersRoomIdImport
       parentRoute: typeof rootRoute
     }
+    '/game/host/$roomid': {
+      id: '/game/host/$roomid'
+      path: '/game/host/$roomid'
+      fullPath: '/game/host/$roomid'
+      preLoaderRoute: typeof GameHostRoomidImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -123,84 +95,68 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/createRoom': typeof CreateRoomRoute
-  '/join': typeof JoinRoute
-  '/playersScreen': typeof PlayersScreenRoute
-  '/questions': typeof QuestionsRoute
+  '/game/$roomId': typeof GameRoomIdRoute
   '/host/$roomId': typeof HostRoomIdRoute
   '/players/$roomId': typeof PlayersRoomIdRoute
+  '/game/host/$roomid': typeof GameHostRoomidRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/createRoom': typeof CreateRoomRoute
-  '/join': typeof JoinRoute
-  '/playersScreen': typeof PlayersScreenRoute
-  '/questions': typeof QuestionsRoute
+  '/game/$roomId': typeof GameRoomIdRoute
   '/host/$roomId': typeof HostRoomIdRoute
   '/players/$roomId': typeof PlayersRoomIdRoute
+  '/game/host/$roomid': typeof GameHostRoomidRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/createRoom': typeof CreateRoomRoute
-  '/join': typeof JoinRoute
-  '/playersScreen': typeof PlayersScreenRoute
-  '/questions': typeof QuestionsRoute
+  '/game/$roomId': typeof GameRoomIdRoute
   '/host/$roomId': typeof HostRoomIdRoute
   '/players/$roomId': typeof PlayersRoomIdRoute
+  '/game/host/$roomid': typeof GameHostRoomidRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/createRoom'
-    | '/join'
-    | '/playersScreen'
-    | '/questions'
+    | '/game/$roomId'
     | '/host/$roomId'
     | '/players/$roomId'
+    | '/game/host/$roomid'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/createRoom'
-    | '/join'
-    | '/playersScreen'
-    | '/questions'
+    | '/game/$roomId'
     | '/host/$roomId'
     | '/players/$roomId'
+    | '/game/host/$roomid'
   id:
     | '__root__'
     | '/'
-    | '/createRoom'
-    | '/join'
-    | '/playersScreen'
-    | '/questions'
+    | '/game/$roomId'
     | '/host/$roomId'
     | '/players/$roomId'
+    | '/game/host/$roomid'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CreateRoomRoute: typeof CreateRoomRoute
-  JoinRoute: typeof JoinRoute
-  PlayersScreenRoute: typeof PlayersScreenRoute
-  QuestionsRoute: typeof QuestionsRoute
+  GameRoomIdRoute: typeof GameRoomIdRoute
   HostRoomIdRoute: typeof HostRoomIdRoute
   PlayersRoomIdRoute: typeof PlayersRoomIdRoute
+  GameHostRoomidRoute: typeof GameHostRoomidRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CreateRoomRoute: CreateRoomRoute,
-  JoinRoute: JoinRoute,
-  PlayersScreenRoute: PlayersScreenRoute,
-  QuestionsRoute: QuestionsRoute,
+  GameRoomIdRoute: GameRoomIdRoute,
   HostRoomIdRoute: HostRoomIdRoute,
   PlayersRoomIdRoute: PlayersRoomIdRoute,
+  GameHostRoomidRoute: GameHostRoomidRoute,
 }
 
 export const routeTree = rootRoute
@@ -214,34 +170,26 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/createRoom",
-        "/join",
-        "/playersScreen",
-        "/questions",
+        "/game/$roomId",
         "/host/$roomId",
-        "/players/$roomId"
+        "/players/$roomId",
+        "/game/host/$roomid"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/createRoom": {
-      "filePath": "createRoom.tsx"
-    },
-    "/join": {
-      "filePath": "join.tsx"
-    },
-    "/playersScreen": {
-      "filePath": "playersScreen.tsx"
-    },
-    "/questions": {
-      "filePath": "questions.tsx"
+    "/game/$roomId": {
+      "filePath": "game.$roomId.tsx"
     },
     "/host/$roomId": {
       "filePath": "host.$roomId.tsx"
     },
     "/players/$roomId": {
       "filePath": "players.$roomId.tsx"
+    },
+    "/game/host/$roomid": {
+      "filePath": "game.host.$roomid.tsx"
     }
   }
 }
