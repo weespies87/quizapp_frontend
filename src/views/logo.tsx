@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+// Make sure GSAP is imported correctly
 import gsap from "gsap";
 
 export const Route = createFileRoute("/")({
@@ -19,111 +20,187 @@ function HomePage() {
   const [error, setError] = useState<string | null>(null);
   const [isNameSet, setIsNameSet] = useState<boolean>(false);
   const [animationFailed, setAnimationFailed] = useState<boolean>(false);
-
+  
   // Refs for GSAP animation
   const titleRef = useRef<HTMLHeadingElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // GSAP Animation Effect - Simplified and faster
+  // GSAP Animation Effect
   useEffect(() => {
+    // Log to verify the effect is running
     console.log("Animation effect running");
-
+    
     // Check if GSAP is available
-    if (typeof gsap === "undefined") {
-      console.error("GSAP is not available");
+    if (typeof gsap === 'undefined') {
+      console.error("GSAP is not available. Make sure to install it with: npm install gsap");
       setAnimationFailed(true);
       return;
     }
-
+    
     // Skip if refs aren't available
     if (!titleRef.current || !containerRef.current) {
       console.error("Refs not available for animation");
       setAnimationFailed(true);
       return;
     }
-
+    
     try {
-      // Get the title element
+      // Get the title element - explicitly type them
       const title = titleRef.current as HTMLHeadingElement;
-
+      const container = containerRef.current as HTMLDivElement;
+      
       console.log("Element found:", title.textContent);
-
+      
       // Get the text content
       const text = title.textContent || "Start Your Quiz";
-      const chars = text.split("");
-
+      const chars = text.split('');
+      
       // Clear and rebuild the title with spans for each character
-      title.innerHTML = "";
-      title.style.visibility = "visible";
-
+      title.innerHTML = '';
+      title.style.visibility = 'visible';
+      
+      // Force visible even if animation fails
       setTimeout(() => {
-        if (title && title.style.visibility !== "visible") {
-          title.style.visibility = "visible";
+        if (title && title.style.visibility !== 'visible') {
+          title.style.visibility = 'visible';
         }
       }, 1000);
-
-      chars.forEach((char) => {
-        const span = document.createElement("span");
-        span.className = "quiz-title-letter";
-        span.textContent = char === " " ? "\u00A0" : char; // Use non-breaking space for spaces
+      
+      chars.forEach(char => {
+        const span = document.createElement('span');
+        span.className = 'quiz-title-letter';
+        span.textContent = char === ' ' ? '\u00A0' : char; // Use non-breaking space for spaces
         title.appendChild(span);
       });
-
-      const letters =
-        document.querySelectorAll<HTMLSpanElement>(".quiz-title-letter");
+      
+      const letters = document.querySelectorAll<HTMLSpanElement>('.quiz-title-letter');
       console.log("Letters found:", letters.length);
-
+      
       if (letters.length === 0) {
         throw new Error("No letters found for animation");
       }
-
-      // Animation timeline
+      
+      // Create a timeline for the 16-bit style animation
       const tl = gsap.timeline();
-
-      // TODO All letters should start visable but dont
-      gsap.set(letters, {
+      
+      // Initial setup - scale all letters to 0 and set initial state
+      gsap.set(letters, { 
         scale: 0,
         opacity: 0,
-        display: "inline-block",
+        display: 'inline-block',
+        color: '#000'
       });
-
+      
+      // First stage: Scanline effect
+      tl.to(container, {
+        duration: 0.8,
+        background: 'linear-gradient(transparent 50%, rgba(0, 0, 0, 0.1) 50%)',
+        backgroundSize: '100% 4px',
+        ease: 'power1.inOut'
+      });
+      
+      // Second stage: Letters appear with pixelated randomization
       letters.forEach((letter, index) => {
-        // the draw time on letters
-        const delay = 0.01 + index * 0.02;
-
+        // Add slight random delay for each letter
+        const delay = 0.05 + index * 0.12;
+        
+        // Pixel-like intro
         tl.to(letter, {
-          duration: 0.15,
-          scale: 1.2,
+          duration: 0.2,
+          scale: 1.4,
           opacity: 1,
-          ease: "back.out(2)",
-          delay: delay,
+          ease: 'steps(1)',
+          filter: 'blur(4px)',
+          delay: delay
         });
-
-        tl.to(
-          letter,
-          {
-            duration: 0.1,
-            scale: 1,
-            ease: "power1.out",
-          },
-          "-=0.05"
-        );
+        
+        // Glitchy effect - random position jitter
+        tl.to(letter, {
+          duration: 0.1,
+          x: '+=5',
+          y: '-=3',
+          rotation: gsap.utils.random(-5, 5),
+          color: '#00f',
+          ease: 'steps(2)',
+          onComplete: function() {
+            // Add CRT-like flicker randomly
+            if (Math.random() > 0.7) {
+              gsap.to(letter, {
+                duration: 0.05,
+                opacity: 0.7,
+                repeat: 1,
+                yoyo: true
+              });
+            }
+          }
+        });
+        
+        // Settle into final position
+        tl.to(letter, {
+          duration: 0.3,
+          scale: 1,
+          x: 0,
+          y: 0,
+          rotation: 0,
+          color: '#000',
+          filter: 'blur(0px)',
+          ease: 'elastic.out(1.2, 0.5)'
+        });
       });
-
-      const styleSheet = document.createElement("style");
+      
+      // Final effect: Add a subtle pixel noise overlay that fades out
+      const noiseEffect = document.createElement('div');
+      noiseEffect.className = 'noise-effect';
+      container.appendChild(noiseEffect);
+      
+      gsap.set(noiseEffect, {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundImage: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAA30lEQVRoge3aMQqDQBBA0RG1sYqNYOMFvIQH8v7WaRPbLZYEXZgZ/zcLKcJjYBeMMcYYY4wxJjCWb+u+vufyLKeUrvP5Uk4553yd5+PnnstZvlvvM/enbvo3dty3WwhhvW+9Xp5TSmmez7f3G2O8rSMTBRERRESw9eplrtdraZrGGGOMMcYYY4z5f7ZOE601/2CtteMPaRsRBRERRESw9eplrtdraZrGGGOMMcYYY4z5f7ZOE601/2CtteMPaRsRBRERRESw9eplrtdraZrGGGOMMcYYY4z5f7ZOE601/2AAAAAAAPiSN+7vgQGSwdLJAAAAAElFTkSuQmCC)',
+        opacity: 0.3,
+        zIndex: 1,
+        pointerEvents: 'none'
+      });
+      
+      tl.to(noiseEffect, {
+        duration: 1,
+        opacity: 0,
+        ease: 'power2.out'
+      });
+      
+      // Add a CRT power-on effect
+      tl.fromTo(container, {
+        boxShadow: '0 0 20px rgba(100, 200, 255, 0.8)'
+      }, {
+        duration: 0.5,
+        boxShadow: '0 0 0px rgba(100, 200, 255, 0)',
+        ease: 'power2.out'
+      }, '-=1');
+      
+      // Add style for letter elements - using insertRule for better browser compatibility
+      const styleSheet = document.createElement('style');
       document.head.appendChild(styleSheet);
-
-      const styleRules = [`.quiz-title-letter { display: inline-block; }`];
-
+      
+      const styleRules = [
+        `.quiz-title-letter { display: inline-block; filter: blur(0px); }`,
+        `.quiz-container { position: relative; }`,
+        `.noise-effect { pointer-events: none; }`
+      ];
+      
+      // Insert rules into the stylesheet
       const sheet = styleSheet.sheet;
       if (sheet) {
-        styleRules.forEach((rule) => {
+        styleRules.forEach(rule => {
           sheet.insertRule(rule, sheet.cssRules.length);
         });
       } else {
-        styleSheet.textContent = styleRules.join("\n");
+        // Fallback if insertRule is not available
+        styleSheet.textContent = styleRules.join('\n');
       }
-
+      
       // Cleanup function
       return () => {
         if (document.head.contains(styleSheet)) {
@@ -133,10 +210,10 @@ function HomePage() {
     } catch (error) {
       console.error("Animation error:", error);
       setAnimationFailed(true);
-
+      
       // Make sure title is visible even if animation fails
       if (titleRef.current) {
-        titleRef.current.style.visibility = "visible";
+        titleRef.current.style.visibility = 'visible';
       }
     }
   }, []); // Empty dependency array ensures this runs only once on mount
@@ -145,7 +222,7 @@ function HomePage() {
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newName = event.target.value;
     setName(newName);
-    localStorage.setItem("playerName", newName);
+    localStorage.setItem('playerName', newName);
   };
 
   const handleRoomCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -156,7 +233,7 @@ function HomePage() {
   const handleSetName = () => {
     if (name.trim()) {
       setIsNameSet(true);
-      localStorage.setItem("playerName", name);
+      localStorage.setItem('playerName', name);
       console.log(`Name set to: ${name}`);
     } else {
       setError("Please enter a name first");
@@ -164,6 +241,7 @@ function HomePage() {
   };
 
   const createRoom = async () => {
+    // Your existing code...
     if (!name.trim()) {
       setError("Please enter your name");
       return;
@@ -193,7 +271,7 @@ function HomePage() {
       if (data.roomId) {
         const hostName = `${data.roomId}-${name}`;
         setHostName(hostName);
-        localStorage.setItem("hostName", hostName);
+        localStorage.setItem('hostName', hostName);
         navigate({ to: "/host/$roomId", params: { roomId: data.roomId } });
       } else if (data.roomcode) {
         // If backend returns roomcode instead of roomId
@@ -210,6 +288,7 @@ function HomePage() {
   };
 
   const handleJoinRoom = async () => {
+    // Your existing code...
     // Validate inputs first
     if (!name.trim()) {
       setError("Please enter your name");
@@ -258,20 +337,21 @@ function HomePage() {
 
   return (
     <div className="home-container flex flex-col justify-center items-center h-svh bg-gray-100">
-      <div
+      <div 
         ref={containerRef}
-        className="relative p-4 z-10"
+        className="quiz-container relative p-4 z-10" 
         style={{
           fontFamily: "Pixelify Sans",
           fontSize: "2rem",
         }}
       >
-        <h2
-          ref={titleRef}
+        <h2 
+          ref={titleRef} 
           className="p-4 text-bold font-pixelify"
-          style={{
-            visibility: animationFailed ? "visible" : "hidden",
-            textShadow: "2px 2px 0px rgba(0, 0, 0, 0.1)",
+          style={{ 
+            visibility: animationFailed ? 'visible' : 'hidden',
+            // Add some text shadow to make it pop
+            textShadow: '2px 2px 0px rgba(0, 0, 0, 0.2)'
           }}
         >
           Start Your Quiz

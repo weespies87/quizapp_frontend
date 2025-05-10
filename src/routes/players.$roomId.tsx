@@ -60,7 +60,7 @@ function RouteComponent() {
     const fetchPlayers = async () => {
       try {
         setLoading(true);
-        const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3001";
+        const apiUrl = import.meta.env.VITE_API_URL || "http://192.168.5.70:3001";
         const response = await fetch(`${apiUrl}/api/players/${roomId}`, {
           method: "GET",
           headers: {
@@ -92,7 +92,7 @@ function RouteComponent() {
   }, [roomId]);
 
   const setReadyStatus = async () => {
-    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3001";
+    const apiUrl = import.meta.env.VITE_API_URL || "http://192.168.5.70:3001";
     try {
       const response = await fetch(`${apiUrl}/api/players/${roomId}/status`, {
         method: "PATCH",

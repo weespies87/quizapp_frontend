@@ -15,7 +15,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as PlayersRoomIdImport } from './routes/players.$roomId'
 import { Route as HostRoomIdImport } from './routes/host.$roomId'
 import { Route as GameRoomIdImport } from './routes/game.$roomId'
-import { Route as GameHostRoomidImport } from './routes/game.host.$roomid'
+import { Route as GameHostRoomIdImport } from './routes/game.host.$roomId'
 
 // Create/Update Routes
 
@@ -43,9 +43,9 @@ const GameRoomIdRoute = GameRoomIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const GameHostRoomidRoute = GameHostRoomidImport.update({
-  id: '/game/host/$roomid',
-  path: '/game/host/$roomid',
+const GameHostRoomIdRoute = GameHostRoomIdImport.update({
+  id: '/game/host/$roomId',
+  path: '/game/host/$roomId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -81,11 +81,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlayersRoomIdImport
       parentRoute: typeof rootRoute
     }
-    '/game/host/$roomid': {
-      id: '/game/host/$roomid'
-      path: '/game/host/$roomid'
-      fullPath: '/game/host/$roomid'
-      preLoaderRoute: typeof GameHostRoomidImport
+    '/game/host/$roomId': {
+      id: '/game/host/$roomId'
+      path: '/game/host/$roomId'
+      fullPath: '/game/host/$roomId'
+      preLoaderRoute: typeof GameHostRoomIdImport
       parentRoute: typeof rootRoute
     }
   }
@@ -98,7 +98,7 @@ export interface FileRoutesByFullPath {
   '/game/$roomId': typeof GameRoomIdRoute
   '/host/$roomId': typeof HostRoomIdRoute
   '/players/$roomId': typeof PlayersRoomIdRoute
-  '/game/host/$roomid': typeof GameHostRoomidRoute
+  '/game/host/$roomId': typeof GameHostRoomIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -106,7 +106,7 @@ export interface FileRoutesByTo {
   '/game/$roomId': typeof GameRoomIdRoute
   '/host/$roomId': typeof HostRoomIdRoute
   '/players/$roomId': typeof PlayersRoomIdRoute
-  '/game/host/$roomid': typeof GameHostRoomidRoute
+  '/game/host/$roomId': typeof GameHostRoomIdRoute
 }
 
 export interface FileRoutesById {
@@ -115,7 +115,7 @@ export interface FileRoutesById {
   '/game/$roomId': typeof GameRoomIdRoute
   '/host/$roomId': typeof HostRoomIdRoute
   '/players/$roomId': typeof PlayersRoomIdRoute
-  '/game/host/$roomid': typeof GameHostRoomidRoute
+  '/game/host/$roomId': typeof GameHostRoomIdRoute
 }
 
 export interface FileRouteTypes {
@@ -125,21 +125,21 @@ export interface FileRouteTypes {
     | '/game/$roomId'
     | '/host/$roomId'
     | '/players/$roomId'
-    | '/game/host/$roomid'
+    | '/game/host/$roomId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/game/$roomId'
     | '/host/$roomId'
     | '/players/$roomId'
-    | '/game/host/$roomid'
+    | '/game/host/$roomId'
   id:
     | '__root__'
     | '/'
     | '/game/$roomId'
     | '/host/$roomId'
     | '/players/$roomId'
-    | '/game/host/$roomid'
+    | '/game/host/$roomId'
   fileRoutesById: FileRoutesById
 }
 
@@ -148,7 +148,7 @@ export interface RootRouteChildren {
   GameRoomIdRoute: typeof GameRoomIdRoute
   HostRoomIdRoute: typeof HostRoomIdRoute
   PlayersRoomIdRoute: typeof PlayersRoomIdRoute
-  GameHostRoomidRoute: typeof GameHostRoomidRoute
+  GameHostRoomIdRoute: typeof GameHostRoomIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -156,7 +156,7 @@ const rootRouteChildren: RootRouteChildren = {
   GameRoomIdRoute: GameRoomIdRoute,
   HostRoomIdRoute: HostRoomIdRoute,
   PlayersRoomIdRoute: PlayersRoomIdRoute,
-  GameHostRoomidRoute: GameHostRoomidRoute,
+  GameHostRoomIdRoute: GameHostRoomIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -173,7 +173,7 @@ export const routeTree = rootRoute
         "/game/$roomId",
         "/host/$roomId",
         "/players/$roomId",
-        "/game/host/$roomid"
+        "/game/host/$roomId"
       ]
     },
     "/": {
@@ -188,8 +188,8 @@ export const routeTree = rootRoute
     "/players/$roomId": {
       "filePath": "players.$roomId.tsx"
     },
-    "/game/host/$roomid": {
-      "filePath": "game.host.$roomid.tsx"
+    "/game/host/$roomId": {
+      "filePath": "game.host.$roomId.tsx"
     }
   }
 }
